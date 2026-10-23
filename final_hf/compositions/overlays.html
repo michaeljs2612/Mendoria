@@ -142,11 +142,44 @@
       color: #1d2b29;
       white-space: nowrap;
     }
-    #chip-dot {
-      width: 22px;
-      height: 22px;
+    /* Usage chip clock: a green minute hand sweeps 12 -> 3 over a filling wedge while the number counts 1 -> 15. */
+    #chip-clock {
+      position: relative;
+      flex: none;
+      box-sizing: border-box;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 4px solid #1f8a70;
+      background: conic-gradient(rgba(31, 138, 112, 0.3) var(--sweep, 6deg), transparent 0);
+    }
+    #chip-clock::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      margin: -4px 0 0 -4px;
       border-radius: 50%;
       background: #1f8a70;
+    }
+    #chip-hand {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 4px;
+      height: 15px;
+      margin: -15px 0 0 -2px;
+      border-radius: 2px;
+      background: #1f8a70;
+      transform-origin: 50% 100%;
+    }
+    #chip-num {
+      display: inline-block;
+      min-width: 2ch;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
     }
   </style>
   <div id="root" data-composition-id="overlays" data-width="1080" data-height="1350">
@@ -189,7 +222,7 @@
     </div>
 
     <div id="chip15" class="clip brand-wrap" data-start="50.55" data-duration="2.19" data-track-index="5">
-      <div id="chip-plate" class="brand-plate"><div id="chip-dot"></div>15 min a day · at home</div>
+      <div id="chip-plate" class="brand-plate"><div id="chip-clock"><i id="chip-hand"></i></div><span><span id="chip-num">1</span> min</span></div>
     </div>
   </div>
   <script>
@@ -215,12 +248,22 @@
     // A small settle as the second stroke lands (no bounce).
     tl.fromTo("#px-xg", { scale: 1.03, svgOrigin: "157 155" }, { scale: 1.0, svgOrigin: "157 155", duration: 0.3, ease: "power3.out" }, 40.36);
 
-    // Brand lockup on "Mendoria support system", then the usage chip on "15 minutes a day, at home".
+    // Brand lockup on "Mendoria support system", then the "15 min" clock chip on "15 minutes a day, at home".
     tl.fromTo("#bl-plate", { opacity: 0, y: 16, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 44.55);
     // green rule draws out from the centre once the plate has landed (Apple "smooth")
     tl.fromTo("#bl-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 44.75);
     tl.to("#bl-plate", { opacity: 0, y: -10, duration: 0.3, ease: "power2.in" }, 45.98);
-    tl.fromTo("#chip-plate", { opacity: 0, y: 16, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 50.6);
+    tl.fromTo("#chip-plate", { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.15, ease: "power2.out" }, 50.6);
+    // Count 1 -> 15 from "15" (50.63) and land before "a day" (51.14), so the number holds for over a second.
+    const chipCount = { v: 1 };
+    const chipNum = document.getElementById("chip-num");
+    const chipClock = document.getElementById("chip-clock");
+    const drawChip = () => {
+      chipNum.textContent = String(Math.max(1, Math.min(15, Math.round(chipCount.v))));
+      chipClock.style.setProperty("--sweep", chipCount.v * 6 + "deg");
+    };
+    tl.fromTo(chipCount, { v: 1 }, { v: 15, duration: 0.7, ease: "power1.out", onUpdate: drawChip }, 50.63);
+    tl.fromTo("#chip-hand", { rotation: 6 }, { rotation: 90, duration: 0.7, ease: "power1.out" }, 50.63);
     tl.to("#chip-plate", { opacity: 0, y: -10, duration: 0.2, ease: "power2.in" }, 52.52);
 
     tl.to({}, { duration: 57.0 }, 0);
