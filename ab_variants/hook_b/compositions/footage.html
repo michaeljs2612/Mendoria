@@ -1,0 +1,22 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #000; }
+    .seg { position: absolute; inset: 0; }
+    .seg video { position: absolute; left: 0; top: 0; width: 1080px; height: 1350px; object-fit: cover; }
+  </style>
+  <div id="root" data-composition-id="footage" data-width="1080" data-height="1350">
+    <!-- New hook with the A-roll grade (same as v-a1..v-a8) plus a small trim {"temperature": -0.07} measured against V6, so it cuts into V6's body without a colour step. -->
+    <div id="seg-hook" class="seg" data-layout-allow-overflow="">
+      <video data-color-grading="{&quot;preset&quot;:null,&quot;intensity&quot;:1,&quot;adjust&quot;:{&quot;exposure&quot;:0.04,&quot;contrast&quot;:0.07,&quot;highlights&quot;:-0.08,&quot;shadows&quot;:0.08,&quot;whites&quot;:0,&quot;blacks&quot;:0,&quot;temperature&quot;:-0.07,&quot;tint&quot;:-0.03,&quot;vibrance&quot;:-0.26,&quot;saturation&quot;:0},&quot;details&quot;:{&quot;vignette&quot;:0.03,&quot;vignetteMidpoint&quot;:0.5,&quot;vignetteRoundness&quot;:0,&quot;vignetteFeather&quot;:0.65,&quot;grain&quot;:0.03,&quot;grainSize&quot;:0.18,&quot;grainRoughness&quot;:0.5},&quot;effects&quot;:{&quot;blur&quot;:0,&quot;pixelate&quot;:0,&quot;chromaBleed&quot;:0,&quot;tapeDamage&quot;:0,&quot;tapeTracking&quot;:0,&quot;tapeNoise&quot;:1,&quot;tapeSpeed&quot;:0.5,&quot;filmArtifacts&quot;:0,&quot;halftone&quot;:0,&quot;halftoneSize&quot;:0,&quot;twoInkPrint&quot;:0,&quot;twoInkPrintSize&quot;:0,&quot;ascii&quot;:0,&quot;asciiSize&quot;:0.06578947368421052,&quot;asciiInvert&quot;:0,&quot;asciiStyle&quot;:0,&quot;asciiColor&quot;:1,&quot;asciiRotation&quot;:0,&quot;dither&quot;:0,&quot;ditherSize&quot;:0,&quot;bloom&quot;:0,&quot;bloomRadius&quot;:8,&quot;monoScreen&quot;:0,&quot;monoScreenSize&quot;:0,&quot;monoScreenAngle&quot;:0,&quot;monoScreenSpread&quot;:0,&quot;monoScreenShape&quot;:0,&quot;monoScreenInvert&quot;:0,&quot;scanlines&quot;:0,&quot;scanlineCount&quot;:0,&quot;scanlineSoftness&quot;:0,&quot;chromaticAberration&quot;:0,&quot;chromaticAngle&quot;:0,&quot;crtCurvature&quot;:0,&quot;digitalGlitch&quot;:0,&quot;digitalGlitchColorSplit&quot;:0,&quot;digitalGlitchLineTear&quot;:0,&quot;digitalGlitchPixelate&quot;:0,&quot;digitalGlitchBlockAmount&quot;:0,&quot;digitalGlitchBlockDisplacement&quot;:0,&quot;digitalGlitchBlockOpacity&quot;:0,&quot;digitalGlitchSpeed&quot;:0,&quot;engraving&quot;:0,&quot;engravingSpacing&quot;:0.4117647058823529,&quot;engravingMinThickness&quot;:0.2,&quot;engravingMaxThickness&quot;:0.4571428571428572,&quot;engravingAngle&quot;:0.25,&quot;engravingContrast&quot;:0.4666666666666667,&quot;engravingSharpness&quot;:0.59,&quot;engravingWave&quot;:0.2,&quot;engravingWaveFrequency&quot;:0.2222222222222222,&quot;crosshatch&quot;:0,&quot;crosshatchSpacing&quot;:0.28,&quot;crosshatchThickness&quot;:0.25,&quot;crosshatchAngle&quot;:0.25,&quot;crosshatchContrast&quot;:0.3333333333333333,&quot;crosshatchEdges&quot;:0.5,&quot;crosshatchLineWeight&quot;:0,&quot;crosshatchWave&quot;:0.33,&quot;crosshatchWaveFrequency&quot;:0.2222222222222222,&quot;kuwahara&quot;:0,&quot;kuwaharaRadius&quot;:0.14285714285714285,&quot;kuwaharaSharpness&quot;:0.3125,&quot;kuwaharaSaturation&quot;:0.5},&quot;lut&quot;:null,&quot;colorSpace&quot;:&quot;rec709&quot;,&quot;hueCurves&quot;:{&quot;hueVsHue&quot;:[[40,0],[72,6],[110,0]],&quot;hueVsSaturation&quot;:[[10,-0.04],[30,-0.04],[50,-0.12],[75,-0.3],[110,-0.32],[150,-0.2],[190,0],[350,-0.02]],&quot;hueVsLuma&quot;:[[40,0],[85,-0.05],[130,0]]}}" id="v-hook" class="clip" src="assets/Hook_B.mp4" data-start="0" data-duration="5.766" data-media-start="0" data-track-index="1" muted playsinline></video>
+    </div>
+    <!-- V6 is already graded and captioned: play it as is. Media-start sits just past frame 115 (3.8333 s). -->
+    <div id="seg-body" class="seg" data-layout-allow-overflow="">
+      <video id="v-body" class="clip" src="assets/V6.mp4" data-start="5.766" data-duration="53.167" data-media-start="3.834" data-track-index="2" muted playsinline></video>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.to({}, { duration: 58.9334 }, 0);
+    window.__timelines["footage"] = tl;
+  </script>
+</template>

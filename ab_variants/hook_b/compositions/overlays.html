@@ -1,0 +1,70 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+
+    /* Hook: same native reel style as V6's hook (one hugging white box per line), ending on three empty checkboxes. */
+    #hook { position: absolute; left: 0; right: 0; top: 96px; display: flex; justify-content: center; }
+    #hook-text {
+      text-align: center; font-family: Montserrat, sans-serif; font-weight: 700; font-size: 58px;
+      line-height: 1.42; letter-spacing: -0.01em; color: #1d2b29; opacity: 0;
+    }
+    #hook-text span { background: #ffffff; padding: 6px 20px 8px; border-radius: 12px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+    .cb {
+      display: inline-block; box-sizing: border-box; width: 0.72em; height: 0.72em; margin-left: 0.22em;
+      border: 0.085em solid #1d2b29; border-radius: 0.2em; vertical-align: -0.08em;
+    }
+
+    /* Checklist callback on "If you're nodding along to all three": the hook's three boxes come back and are checked
+       one per word. Apple HIG: a brief, precise state change (fill + checkmark, not colour alone), sound in sync. */
+    .cb:first-of-type { margin-left: 0.34em; }
+
+    #checks { position: absolute; left: 0; right: 0; top: 110px; display: flex; justify-content: center; }
+    #ck-plate { display: flex; gap: 22px; padding: 18px 26px; background: #ffffff; border-radius: 24px; opacity: 0; }
+    .ck { position: relative; width: 76px; height: 76px; }
+    .ck-box, .ck-fill { position: absolute; inset: 0; border-radius: 18px; }
+    .ck-box { box-sizing: border-box; border: 6px solid #1d2b29; }
+    .ck-fill { background: #1f8a70; opacity: 0; }
+    .ck svg { position: absolute; inset: 0; width: 76px; height: 76px; overflow: visible; }
+    .ck path { fill: none; stroke: #ffffff; stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 56; stroke-dashoffset: 56; }
+  </style>
+  <div id="root" data-composition-id="overlays" data-width="1080" data-height="1350">
+    <div id="hook" class="clip" data-start="0.15" data-duration="5.564" data-track-index="1">
+      <div id="hook-text"><span>3 signs it&#x2019;s not</span><br /><span>regular back pain<i class="cb"></i><i class="cb"></i><i class="cb"></i></span></div>
+    </div>
+
+    <div id="checks" class="clip" data-start="31.247" data-duration="2.326" data-track-index="2">
+      <div id="ck-plate">
+        <div class="ck" id="ck0"><div class="ck-box"></div><div class="ck-fill"></div><svg viewBox="0 0 76 76"><path d="M20 39 L33 52 L57 26" /></svg></div>
+        <div class="ck" id="ck1"><div class="ck-box"></div><div class="ck-fill"></div><svg viewBox="0 0 76 76"><path d="M20 39 L33 52 L57 26" /></svg></div>
+        <div class="ck" id="ck2"><div class="ck-box"></div><div class="ck-fill"></div><svg viewBox="0 0 76 76"><path d="M20 39 L33 52 L57 26" /></svg></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+
+    // Hook box: Apple "smooth" entrance (0.5 s power3.out), short exit just before "Number one".
+    tl.fromTo("#hook-text", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.15);
+    tl.to("#hook-text", { opacity: 0, y: -8, duration: 0.16, ease: "power2.in" }, 5.554);
+
+    // Checklist: arrives on the cut to Lolo right after "If" (long-tailed ease), each box checks on its word, leaves before "here's what".
+    tl.fromTo("#ck-plate", { opacity: 0, y: 10, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "expo.out" }, 31.267);
+    const tickAt = (i, t) => {
+      const ck = "#ck" + i;
+      // press and release like a tap (spring ~0.8 damping: a hair of overshoot, no bounce)
+      tl.to(ck, { scale: 0.9, duration: 0.07, ease: "power2.out" }, t);
+      tl.to(ck, { scale: 1, duration: 0.4, ease: "back.out(1.3)" }, t + 0.07);
+      // state change: brand-green fill (the caption highlight colour) and a white checkmark drawn in one stroke
+      tl.to(ck + " .ck-fill", { opacity: 1, duration: 0.12, ease: "power2.out" }, t);
+      tl.to(ck + " .ck-box", { borderColor: "#1f8a70", duration: 0.12, ease: "power2.out" }, t);
+      tl.fromTo(ck + " path", { strokeDashoffset: 56 }, { strokeDashoffset: 0, duration: 0.24, ease: "power3.out" }, t + 0.04);
+    };
+    tickAt(0, 31.953); // "along"
+    tickAt(1, 32.413); // "all"
+    tickAt(2, 32.733); // "three"
+    tl.to("#ck-plate", { opacity: 0, y: -6, duration: 0.22, ease: "power2.in" }, 33.333);
+
+    tl.to({}, { duration: 58.9334 }, 0);
+    window.__timelines["overlays"] = tl;
+  </script>
+</template>
