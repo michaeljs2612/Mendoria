@@ -1,0 +1,6 @@
+# HyperFrames project: keep the editable sources, not media, renders or caches
+final_hf/assets/*.mp4
+final_hf/assets/*.wav
+final_hf/renders/
+final_hf/snapshots/
+final_hf/.hyperframes/
